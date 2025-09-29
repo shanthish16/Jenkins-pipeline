@@ -22,4 +22,18 @@ pipeline {
             }
         }
 }
+     stage('Upload to JFrog') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'jfrog-creds',
+                                                 usernameVariable: 'JFROG_USER',
+                                                 passwordVariable: 'JFROG_PASS')]) {
+                    sh '''
+                        echo "Uploading WAR to JFrog..."
+                        WAR_FILE=$(ls sample-app/target/*.war)
+                        curl -u $JFROG_USER:$JFROG_PASS -T $WAR_FILE \
+                        "https://trialxl53ee.jfrog.io/artifactory/DevOps/${JOB_NAME}-${BUILD_NUMBER}-sample.war"
+                    '''
+                }
+            }
+        }
 }
