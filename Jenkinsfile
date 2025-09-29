@@ -21,12 +21,16 @@ pipeline {
                 }
             }
         }
-}
-     stage('Upload to JFrog') {
+
+        stage('Upload to JFrog') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'jfrog-creds',
-                                                 usernameVariable: 'JFROG_USER',
-                                                 passwordVariable: 'JFROG_PASS')]) {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'jfrog-creds',
+                        usernameVariable: 'JFROG_USER',
+                        passwordVariable: 'JFROG_PASS'
+                    )
+                ]) {
                     sh '''
                         echo "Uploading WAR to JFrog..."
                         WAR_FILE=$(ls sample-app/target/*.war)
@@ -36,4 +40,5 @@ pipeline {
                 }
             }
         }
+    }
 }
